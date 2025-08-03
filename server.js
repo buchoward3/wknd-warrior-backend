@@ -59,11 +59,22 @@ if (process.env.REDIS_URL && process.env.REDIS_URL !== 'redis://localhost:6379')
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: [
-    'https://wknd-warrior-app.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:3001'
-  ],
+  origin: function(origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001'
+    ];
+    
+    // Allow any Vercel deployment
+    if (!origin || 
+        allowedOrigins.includes(origin) || 
+        origin.includes('vercel.app') ||
+        origin.includes('wknd-warrior')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -723,3 +734,4 @@ app.listen(PORT, () => {
 
 
 module.exports = app;
+
