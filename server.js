@@ -59,8 +59,14 @@ if (process.env.REDIS_URL && process.env.REDIS_URL !== 'redis://localhost:6379')
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://claude.ai', 'https://console.anthropic.com'],
-  credentials: true
+  origin: [
+    'https://wknd-warrior-app.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:3001'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json({ limit: '10mb' }));
 
@@ -714,5 +720,6 @@ app.listen(PORT, () => {
   console.log(`⚡ LIVE APIs: Spotify ✅ ESPN ✅ Ticketmaster ✅ Apple Music ✅`);
   console.log(`🪖 Ready to conquer weekends with REAL data!`);
 });
+
 
 module.exports = app;
